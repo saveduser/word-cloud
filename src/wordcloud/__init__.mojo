@@ -1,3 +1,8 @@
+from wordcloud.version import (
+    LibraryInfo,
+    get_version,
+    get_supported_mojo,
+)
 from wordcloud.types import Rect, WordFrequency, PlacedWord
 from wordcloud.config import WordCloudConfig
 from wordcloud.tokenizer import Tokenizer, tokenize

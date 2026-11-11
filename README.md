@@ -52,14 +52,18 @@ Measured on Mojo 1.2.0 (Ubuntu-22.04 / x86_64):
 
 ```text
 word-cloud/
-├── pixi.toml                         # Project tasks and Mojo dependencies
+├── pixi.toml                         # Project tasks and Mojo dependencies (pinned to ==1.2.0)
+├── pixi.lock                         # Pinned dependency lockfile
 ├── LICENSE                           # MIT License
 ├── README.md                         # Documentation and API guide
+├── CHANGELOG.md                      # Release notes & version history
+├── COMPATIBILITY.md                  # Mojo versioning, API stability & upgrade guide
 ├── CONTRIBUTING.md                   # Development workflow
 │
 ├── src/
 │   └── wordcloud/
 │       ├── __init__.mojo             # Public API exports
+│       ├── version.mojo              # LibraryInfo and SemVer metadata
 │       ├── types.mojo                # Core types (Rect, WordFrequency, PlacedWord)
 │       ├── config.mojo               # WordCloudConfig struct and validation
 │       ├── tokenizer.mojo            # Pure Mojo text tokenizer
@@ -75,12 +79,13 @@ word-cloud/
 │           └── svg.mojo              # Compliant SVG 1.1 exporter
 │
 ├── tests/
+│   ├── test_version.mojo             # 2 unit tests for LibraryInfo and version queries
 │   ├── test_config.mojo              # 8 unit tests for config and types
 │   ├── test_tokenizer.mojo           # 7 unit tests for tokenization
 │   ├── test_stopwords.mojo           # 4 unit tests for stopwords
 │   ├── test_frequency.mojo           # 4 unit tests for frequency analysis
 │   ├── test_collision.mojo           # 5 unit tests for collision detection
-│   ├── test_layout.mojo              # 4 unit tests for layout and determinism
+│   ├── test_layout.mojo              # 5 unit tests for layout, determinism & high density
 │   ├── test_color.mojo               # 4 unit tests for colors and palettes
 │   ├── test_svg.mojo                 # 3 unit tests for SVG export and escaping
 │   └── test_all.mojo                 # 3 end-to-end integration tests

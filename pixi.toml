@@ -3,10 +3,10 @@ authors = ["Jayaditya Gaikwad <gaikwadjayaditya@gmail.com>"]
 channels = ['https://conda.modular.com/max', 'conda-forge']
 name = "word-cloud"
 platforms = ['linux-64']
-version = "0.1.0"
+version = "0.2.0"
 
 [tasks]
-test = "mojo -I src tests/test_config.mojo && mojo -I src tests/test_tokenizer.mojo && mojo -I src tests/test_stopwords.mojo && mojo -I src tests/test_frequency.mojo && mojo -I src tests/test_collision.mojo && mojo -I src tests/test_layout.mojo && mojo -I src tests/test_color.mojo && mojo -I src tests/test_svg.mojo && mojo -I src tests/test_all.mojo"
+test = "mojo -I src tests/test_version.mojo && mojo -I src tests/test_config.mojo && mojo -I src tests/test_tokenizer.mojo && mojo -I src tests/test_stopwords.mojo && mojo -I src tests/test_frequency.mojo && mojo -I src tests/test_collision.mojo && mojo -I src tests/test_layout.mojo && mojo -I src tests/test_color.mojo && mojo -I src tests/test_svg.mojo && mojo -I src tests/test_all.mojo"
 benchmark = "mojo -I src benchmarks/benchmark_generation.mojo"
 evaluate = "mojo -I src benchmarks/evaluate_quality.mojo"
 example-basic = "mojo -I src examples/basic.mojo"
@@ -15,4 +15,4 @@ example-stopwords = "mojo -I src examples/custom_stopwords.mojo"
 example-frequencies = "mojo -I src examples/from_frequencies.mojo"
 
 [dependencies]
-mojo = ">=1.2.0,<2"
+mojo = "==1.2.0"
