@@ -6,7 +6,7 @@ def compute_frequencies(
     stopwords: Set[String],
     min_frequency: Int = 1,
     max_words: Int = 200,
-) -> List[WordFrequency]:
+) raises -> List[WordFrequency]:
     """Computes sorted word frequencies from token list, filtering stopwords and thresholds."""
     var counts = Dict[String, Int]()
 
@@ -31,7 +31,7 @@ def compute_frequencies(
     if len(results) > max_words:
         var truncated = List[WordFrequency]()
         for i in range(max_words):
-            truncated.append(results[i])
+            truncated.append(results[i].copy())
         return truncated^
 
     return results^
@@ -42,7 +42,7 @@ def frequencies_from_dict(
     min_frequency: Int = 1,
     max_words: Int = 200,
     case_sensitive: Bool = False,
-) -> List[WordFrequency]:
+) raises -> List[WordFrequency]:
     """Builds sorted WordFrequency list from user-supplied frequency dictionary."""
     var merged = Dict[String, Int]()
 
@@ -69,7 +69,7 @@ def frequencies_from_dict(
     if len(results) > max_words:
         var truncated = List[WordFrequency]()
         for i in range(max_words):
-            truncated.append(results[i])
+            truncated.append(results[i].copy())
         return truncated^
 
     return results^
