@@ -8,6 +8,7 @@ version = "0.1.0"
 [tasks]
 test = "mojo -I src tests/test_config.mojo && mojo -I src tests/test_tokenizer.mojo && mojo -I src tests/test_stopwords.mojo && mojo -I src tests/test_frequency.mojo && mojo -I src tests/test_collision.mojo && mojo -I src tests/test_layout.mojo && mojo -I src tests/test_color.mojo && mojo -I src tests/test_svg.mojo && mojo -I src tests/test_all.mojo"
 benchmark = "mojo -I src benchmarks/benchmark_generation.mojo"
+evaluate = "mojo -I src benchmarks/evaluate_quality.mojo"
 example-basic = "mojo -I src examples/basic.mojo"
 example-colors = "mojo -I src examples/custom_colors.mojo"
 example-stopwords = "mojo -I src examples/custom_stopwords.mojo"

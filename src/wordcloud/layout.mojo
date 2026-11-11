@@ -1,5 +1,5 @@
 from std.collections import List
-from std.math import cos, sin, min, max
+from std.math import cos, sin, sqrt, min, max
 from wordcloud.types import Rect, WordFrequency, PlacedWord
 from wordcloud.config import WordCloudConfig
 from wordcloud.collision import SpatialGridIndex
@@ -29,7 +29,7 @@ struct PseudoRandom(Copyable, Movable):
         return self.next_float() < true_probability
 
 struct WordCloudLayout(Copyable, Movable):
-    """Placement engine for positioning words on the canvas using elliptical spirals."""
+    """Placement engine for positioning words on the canvas using elliptical Archimedean spirals."""
     var config: WordCloudConfig
 
     def __init__(out self, config: WordCloudConfig):
@@ -64,17 +64,28 @@ struct WordCloudLayout(Copyable, Movable):
         var center_x = Float64(self.config.width) / 2.0
         var center_y = Float64(self.config.height) / 2.0
         var aspect = Float64(self.config.width) / Float64(self.config.height)
+        var max_radius = sqrt(center_x * center_x + center_y * center_y) + 30.0
 
         var num_colors = len(colors)
+
+        # Radial step scaled to canvas diagonal
+        var r_step = max(0.40, min(0.85, max_radius / 1200.0))
+
+        # Progressive font scaling passes
+        var scale_factors = List[Float64]()
+        scale_factors.append(1.0)
+        scale_factors.append(0.82)
+        scale_factors.append(0.67)
+        scale_factors.append(0.52)
 
         for i in range(n_words):
             var wf = frequencies[i].copy()
             var font_size = font_sizes[i]
 
-            # Decide orientation
-            var is_vertical = False
+            # Primary orientation decision
+            var primary_is_vertical = False
             if self.config.allow_rotation:
-                is_vertical = not prng.next_bool(self.config.prefer_horizontal)
+                primary_is_vertical = not prng.next_bool(self.config.prefer_horizontal)
 
             # Pick color from palette
             var color = String("#333333")
@@ -84,66 +95,87 @@ struct WordCloudLayout(Copyable, Movable):
                     color_idx = num_colors - 1
                 color = colors[color_idx]
 
-            # Try placing at current font size, or reduced size if necessary
-            var current_size = font_size
             var placed_successfully = False
 
-            for _ in range(3):
+            for pass_idx in range(len(scale_factors)):
+                var current_size = font_size * scale_factors[pass_idx]
                 if current_size < self.config.min_font_size:
                     current_size = self.config.min_font_size
 
-                var dims = estimate_word_dimensions(
-                    wf.word, current_size, self.config.font_family
-                )
+                # Try primary orientation first, then secondary if it didn't fit
+                for orient_idx in range(2):
+                    var is_vertical = primary_is_vertical
+                    if orient_idx == 1:
+                        if not self.config.allow_rotation:
+                            break
+                        is_vertical = not primary_is_vertical
 
-                # Bounding box dimensions depending on orientation
-                var bbox_w = dims.width
-                var bbox_h = dims.height
-                if is_vertical:
-                    bbox_w = dims.height
-                    bbox_h = dims.width
-
-                # Small initial angular offset based on prng for natural distribution
-                var theta_offset = prng.next_float() * 6.283185307179586
-                var theta_step: Float64 = 0.10
-                var r_step: Float64 = 0.50
-
-                for step in range(self.config.max_placement_attempts):
-                    var theta = theta_offset + Float64(step) * theta_step
-                    var r = Float64(step) * r_step
-
-                    var x = center_x + r * cos(theta) * aspect
-                    var y = center_y + r * sin(theta)
-
-                    var candidate = Rect(
-                        x - bbox_w / 2.0,
-                        y - bbox_h / 2.0,
-                        bbox_w,
-                        bbox_h,
+                    var dims = estimate_word_dimensions(
+                        wf.word, current_size, self.config.font_family
                     )
 
-                    if not spatial_index.collides(candidate, self.config.padding):
-                        # Spot found!
-                        spatial_index.insert(candidate, self.config.padding)
-                        var pw = PlacedWord(
-                            wf.word,
-                            wf.frequency,
-                            current_size,
-                            candidate.x,
-                            candidate.y,
+                    var bbox_w = dims.width
+                    var bbox_h = dims.height
+                    if is_vertical:
+                        bbox_w = dims.height
+                        bbox_h = dims.width
+
+                    # Reject immediately if word dimensions exceed canvas
+                    if bbox_w >= Float64(self.config.width) or bbox_h >= Float64(self.config.height):
+                        continue
+
+                    # Uniform arc-length stepping
+                    var theta_offset = prng.next_float() * 6.283185307179586
+                    var r: Float64 = 0.0
+                    var theta: Float64 = theta_offset
+
+                    var cx = center_x
+                    var cy = center_y
+                    if pass_idx > 0:
+                        cx += (prng.next_float() - 0.5) * 30.0
+                        cy += (prng.next_float() - 0.5) * 30.0
+
+                    var step = 0
+                    while step < self.config.max_placement_attempts and r < max_radius:
+                        step += 1
+                        r += r_step
+
+                        # Adaptive theta step: keeps tangential candidate spacing uniform
+                        var d_theta = max(0.04, min(0.12, 6.0 / max(r, 12.0)))
+                        theta += d_theta
+
+                        var x = cx + r * cos(theta) * aspect
+                        var y = cy + r * sin(theta)
+
+                        var candidate = Rect(
+                            x - bbox_w / 2.0,
+                            y - bbox_h / 2.0,
                             bbox_w,
                             bbox_h,
-                            is_vertical,
-                            color,
                         )
-                        placed.append(pw.copy())
-                        placed_successfully = True
+
+                        if not spatial_index.collides(candidate, self.config.padding):
+                            # Spot found!
+                            spatial_index.insert(candidate, self.config.padding)
+                            var pw = PlacedWord(
+                                wf.word,
+                                wf.frequency,
+                                current_size,
+                                candidate.x,
+                                candidate.y,
+                                bbox_w,
+                                bbox_h,
+                                is_vertical,
+                                color,
+                            )
+                            placed.append(pw.copy())
+                            placed_successfully = True
+                            break
+
+                    if placed_successfully:
                         break
 
                 if placed_successfully:
                     break
-
-                # Reduce font size for next pass
-                current_size = current_size * 0.75
 
         return placed^

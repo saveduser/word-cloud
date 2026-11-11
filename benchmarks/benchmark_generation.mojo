@@ -14,55 +14,15 @@ from wordcloud import (
 
 def benchmark_tokenization() raises:
     print("\n--- 1. Tokenizer Benchmark ---")
-    var paragraph = """The Development of Artificial Intelligence
+    var paragraph = (
+        "Mojo is a modern systems programming language that synthesizes the developer friendliness "
+        "of Python with the raw execution speed and memory control of C, C++, and Rust. "
+        "Designed for AI hardware acceleration, machine learning compilers, and high-performance "
+        "heterogeneous computing, Mojo delivers strong static typing, compile-time metaprogramming, "
+        "zero-cost abstractions, full ownership semantics, and automatic vectorization with SIMD. "
+    )
 
-Artificial Intelligence (AI) has evolved from a speculative concept to a transformative technology impacting various aspects of modern life. This essay explores AI's historical development, key milestones, and future potential, highlighting its significance in shaping technological, economic, and social landscapes.
-
-Historical Evolution of AI
-
-The concept of AI dates back to ancient myths, but formal development began in the mid-20th century. John McCarthy coined the term "artificial intelligence" in 1956 during the Dartmouth Conference, where researchers explored creating machines that could simulate human intelligence. Early AI research focused on symbolic AI or "good old-fashioned AI" (GOFAI), involving programming machines with rules to mimic human decision-making. Alan Turing's theoretical foundations, such as the Turing Test, proposed that a machine could be considered intelligent if it could engage in a conversation indistinguishable from a human's.
-
-Key Milestones in AI Development
-
-1950s-1960s: Early Enthusiasm and Expert Systems
-
-Early AI programs like the Logic Theorist and General Problem Solver demonstrated potential in performing tasks requiring human-like reasoning. The 1970s and 1980s saw the rise of expert systems, such as MYCIN for medical diagnosis, showcasing AI's ability to store and apply knowledge to specific domains.
-
-1980s-1990s: The Rise of Machine Learning
-
-Limitations of rule-based systems led to machine learning, where machines learn from data rather than pre-programmed rules. Neural networks, inspired by the human brain, gained traction, and backpropagation algorithms enabled effective training, leading to breakthroughs in pattern recognition and classification.
-
-2000s: The Big Data Era
-
-The internet and data proliferation transformed AI research. Machine learning algorithms, especially deep learning, began to outperform traditional methods in tasks like image and speech recognition. Companies like Google and Amazon revolutionized search engines, social media, and e-commerce using AI.
-
-2010s: AI in Everyday Life
-
-AI became ubiquitous, with applications in personal assistants like Siri and Alexa, autonomous vehicles, and recommendation systems. Convolutional neural networks (CNNs) and recurrent neural networks (RNNs) enhanced AI's capabilities in processing visual and sequential data.
-
-Current State and Applications of AI
-
-Today, AI encompasses machine learning, natural language processing, robotics, and more, impacting various industries:
-
-Healthcare: AI algorithms assist in diagnosing diseases, predicting patient outcomes, and personalizing treatment plans. Machine learning models analyze medical images with remarkable accuracy, aiding early detection of conditions like cancer.
-
-Finance: AI-driven algorithms analyze market trends, detect fraudulent activities, and optimize investment strategies. Robo-advisors provide personalized financial advice based on individual risk profiles.
-
-Education: AI-powered platforms offer personalized learning experiences, adapting to students' needs and progress. Virtual tutors and intelligent content recommendation systems enhance educational experiences.
-
-Entertainment: AI generates content, recommends music and movies, and creates art. Streaming services use AI to suggest personalized content, keeping users engaged.
-
-Future Potential and Ethical Considerations
-
-AI's future holds immense potential, with advancements expected in areas like general AI and quantum computing, which could exponentially increase computational power. However, rapid AI development raises ethical and societal concerns, such as data privacy, algorithmic bias, and job displacement. Ensuring AI systems are transparent, fair, and aligned with human values is crucial.
-
-The concept of artificial general intelligence (AGI), where machines surpass human intelligence, poses existential questions about humanity's future. Developing AGI requires careful consideration of safety measures and ethical guidelines to prevent unintended consequences.
-
-Conclusion
-
-The development of artificial intelligence is one of the most significant technological advancements in human history. From its early theoretical foundations to its current applications in everyday life, AI has transformed how we live, work, and interact with the world. As we look to the future, it is essential to navigate the ethical and societal challenges accompanying AI's development, ensuring this powerful technology serves the greater good of humanity."""
-
-    # Replicate into a large document (~5000 words)
+    # Replicate into a large document (~5600 words)
     var doc = String("")
     for _ in range(100):
         doc += paragraph
@@ -90,7 +50,7 @@ def benchmark_spatial_index() raises:
             index.insert(r)
     var t1 = perf_counter_ns()
 
-    # Query 1000 random candidate positions
+    # Query 1000 candidate positions
     var coll_count = 0
     var t2 = perf_counter_ns()
     for k in range(1000):
@@ -102,32 +62,38 @@ def benchmark_spatial_index() raises:
     var insert_ms = Float64(t1 - t0) / 1_000_000.0
     var query_ms = Float64(t3 - t2) / 1_000_000.0
 
-    print("100 Rects Insertion:  ", insert_ms, "ms")
+    print("100 Rects Insertion:    ", insert_ms, "ms")
     print("1,000 Collision Queries:", query_ms, "ms (", Int(1000.0 / (query_ms / 1000.0)), "queries/sec)")
-    print("Collisions detected:   ", coll_count)
+    print("Collisions detected:     ", coll_count)
 
 def benchmark_end_to_end() raises:
-    print("\n--- 3. End-to-End Generation Benchmark ---")
+    print("\n--- 3. End-to-End Generation Benchmark (Medium & Large) ---")
     var raw = (
         "performance compiler acceleration vectorization optimization "
         "concurrency distributed tensor hardware efficiency "
         "modularity architecture scalability robustness throughput "
-        "parallelism instruction pipeline execution algorithm"
+        "parallelism instruction pipeline execution algorithm "
+        "memory safety typing kernel fusion cache latency "
+        "bandwidth register simd automated testing profiling "
+        "telemetry asynchronous graphics rendering vision robotics "
+        "networks framework developer usability flexibility python "
+        "rust zero abstraction generic trait value copy "
+        "move heap stack uniform partitioning spatial grid "
+        "index collision bounding box spiral archimedean orientation "
+        "typography glyph scalable viewbox canvas background palette "
+        "monochrome pastel viridis contrast gradient interpolation"
     )
     var word_parts = raw.split(" ")
-    var words = List[String]()
-    for i in range(len(word_parts)):
-        words.append(String(word_parts[i]))
-
     var freqs = Dict[String, Int]()
-    for i in range(len(words)):
-        freqs[words[i]] = (len(words) - i) * 10
+    for i in range(len(word_parts)):
+        var w = String(word_parts[i])
+        freqs[w] = (len(word_parts) - i) * 3 + 10
 
     var cloud = WordCloud(
         width=1200,
         height=800,
         min_font_size=12.0,
-        max_font_size=90.0,
+        max_font_size=85.0,
         padding=3.0,
         random_seed=42,
     )
@@ -137,14 +103,15 @@ def benchmark_end_to_end() raises:
     var t1 = perf_counter_ns()
 
     var elapsed_ms = Float64(t1 - t0) / 1_000_000.0
-    print("Words placed: ", result.word_count())
-    print("Layout time:  ", elapsed_ms, "ms")
+    print("Input unique words:      ", len(freqs))
+    print("Successfully placed:     ", result.word_count(), "(", (Float64(result.word_count()) / Float64(len(freqs))) * 100.0, "%)")
+    print("Layout time:             ", elapsed_ms, "ms")
 
     var t2 = perf_counter_ns()
     var svg = result.to_svg()
     var t3 = perf_counter_ns()
     var svg_ms = Float64(t3 - t2) / 1_000_000.0
-    print("SVG render:   ", svg_ms, "ms (SVG byte length:", svg.byte_length(), ")")
+    print("SVG render time:         ", svg_ms, "ms (SVG size:", svg.byte_length(), "bytes)")
 
 def main() raises:
     print("========================================")

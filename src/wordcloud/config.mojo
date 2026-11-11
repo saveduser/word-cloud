@@ -32,7 +32,7 @@ struct WordCloudConfig(Copyable, Movable):
         padding: Float64 = 3.0,
         prefer_horizontal: Float64 = 0.9,
         allow_rotation: Bool = True,
-        max_placement_attempts: Int = 500,
+        max_placement_attempts: Int = 1500,
         random_seed: Int = 42,
         case_sensitive: Bool = False,
     ):

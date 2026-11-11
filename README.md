@@ -41,10 +41,10 @@ Measured on Mojo 1.2.0 (Ubuntu-22.04 / x86_64):
 
 | Stage | Throughput / Latency |
 |---|---|
-| **Tokenizer** | **3,006,856 tokens/sec** (~5,600 tokens in 1.86 ms) |
-| **Spatial Grid Index** | **10,610,642 queries/sec** (1,000 queries in 0.094 ms) |
-| **Full Layout Placement** | **1.70 ms** for multi-word layout |
-| **SVG Serialization** | **0.063 ms** (~2.8 KB SVG) |
+| **Tokenizer** | **1,277,250 tokens/sec** (~5,600 tokens in 4.38 ms) |
+| **Spatial Grid Index** | **4,756,084 queries/sec** (1,000 queries in 0.21 ms) |
+| **Full HD Layout Placement** | **14.78 ms** (74/75 words placed, 98.7% success rate) |
+| **SVG Serialization** | **0.093 ms** (~6.0 KB SVG) |
 
 ---
 
