@@ -1,0 +1,14 @@
+[workspace]
+authors = ["Jayaditya Gaikwad <gaikwadjayaditya@gmail.com>"]
+channels = ['https://conda.modular.com/max', 'conda-forge']
+name = "word-cloud"
+platforms = ['linux-64']
+version = "0.1.0"
+
+[tasks]
+test = "mojo -I src tests/test_all.mojo"
+benchmark = "mojo -I src benchmarks/benchmark_generation.mojo"
+example-basic = "mojo -I src examples/basic.mojo"
+
+[dependencies]
+mojo = ">=1.2.0,<2"
