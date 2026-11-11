@@ -1,3 +1,9 @@
-# pixi environments
-.pixi/*
-!.pixi/config.toml
+.pixi/
+pixi.lock
+*.svg
+.mojo_cache/
+__pycache__/
+*.o
+*.mojoc
+*.mojopkg
+output_*.svg
