@@ -148,7 +148,7 @@ def benchmark_end_to_end() raises:
 
 def main() raises:
     print("========================================")
-    print("Pure Mojo Word Cloud Performance Suite")
+    print("Performance")
     print("========================================")
     benchmark_tokenization()
     benchmark_spatial_index()

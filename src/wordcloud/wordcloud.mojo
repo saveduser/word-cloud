@@ -40,7 +40,7 @@ struct WordCloudResult(Copyable, Movable):
         save_svg(self.to_svg(), path)
 
 struct WordCloud(Copyable, Movable):
-    """Main word cloud generator for pure Mojo applications."""
+    """Main word cloud generator for Mojo applications."""
     var config: WordCloudConfig
     var palette: Palette
     var stopwords: Set[String]

@@ -30,7 +30,7 @@ Designed from the ground up to take full advantage of Mojo's systems programming
   - Hex parsing and RGB linear interpolation.
   - User-defined custom color lists.
 - **Compliant SVG Exporter**:
-  - Pure Mojo SVG 1.1 generation with automatic XML entity escaping (`&`, `<`, `>`, `"`, `'`).
+  - Mojo SVG 1.1 generation with automatic XML entity escaping (`&`, `<`, `>`, `"`, `'`).
   - Native file export without external rasterizers.
 
 ---
